@@ -55,10 +55,30 @@ class Params_KodoExchange(Params):
     amount_to = 839.4 # Swap up to a certain amount of coins
 
     swap_all_balance = True # Swap all balance
-    keep_value_from = 0 # How many coins to keep on the wallet (only works when: swap_all_balance = True)
-    keep_value_to = 0 # Up to how many coins to keep on the wallet (only works when: swap_all_balance = True)
-
-    keep_value_gas_from = 0.0002 # How many coins to keep for gas fees
-    keep_value_gas_to = 0.0003 # Up to how many coins to keep for gas fees
+    keep_value_from = 0.0002 # How many coins to keep on the wallet (only works when: wrap_all_balance = True or low balance in native token)
+    keep_value_to = 0.0003 # Up to how many coins to keep on the wallet (only works when: wrap_all_balance or low balance in native token)
 
     slippage = 1 # Slippage in
+
+class Params_ETHWraps(Params):
+    def __init__(self) -> None:
+        super().__init__()
+
+    """
+    Wraps and unwraps ETH
+    Official website: https://weth.io/
+    Chains: Any
+    
+    TOKENS: ETH, WETH
+    """
+    chain = 'taiko'
+
+    from_token_address = 'ETH'
+    to_token_address = 'WETH'
+
+    amount_from = 0.00003 # Wrap from a certain amount of coins
+    amount_to = 0.00006 # Wrap up to a certain amount of coins
+
+    wrap_all_balance = False # Wrap all balance
+    keep_value_from = 0.0001 # How many coins to keep on the wallet (only works when: wrap_all_balance = True or low balance in native token)
+    keep_value_to = 0.0002 # Up to how many coins to keep on the wallet (only works when: wrap_all_balance or low balance in native token)

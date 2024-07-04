@@ -2,7 +2,7 @@ from . import console
 from .proxy import check_proxy
 from src.data.data import CHAINS
 from src.data.abi import ERC721_ABI, ERC20_ABI
-from src.utils.tools import int_to_decimal, decimal_to_int
+from src.utils.tools import int_to_decimal, decimal_to_int, get_decimal_places
 
 from web3 import Web3, AsyncHTTPProvider
 from web3.eth import AsyncEth
@@ -176,30 +176,47 @@ class Web3Manager:
     
     async def get_amount_in(
             self, amount_from: int | float, 
-            amount_to: int | float, keep_value_gas_from: int | float,
-            keep_value_gas_to: int | float, address_token: str,
+            amount_to: int | float, address_token: str,
             swap_all_balance: bool, keep_value_from: int | float, keep_value_to: int | float
             ) -> int | float:
-        amount = round(random.uniform(amount_from, amount_to), random.randint(7, 8))
-        keep_value_gas = round(random.uniform(keep_value_gas_from, keep_value_gas_to), random.randint(7, 8))
+        
+        def random_round(value, min_decimals, max_decimals):
+            """Округлює значення до випадкової кількості десяткових знаків"""
+            return round(value, random.randint(min_decimals, max_decimals))
+
+        # Визначаємо мінімальну кількість десяткових знаків для amount і keep_value
+        min_amount_decimals = max(1, len(str(amount_from).split('.')[-1]) if '.' in str(amount_from) else 0)
+        min_keep_value_decimals = max(1, len(str(keep_value_from).split('.')[-1]) if '.' in str(keep_value_from) else 0)
+
+        if isinstance(amount_from, int) and isinstance(amount_to, int):
+            amount = random_round(random.randint(amount_from, amount_to), 0, 4)
+        else: 
+            amount = random_round(random.uniform(amount_from, amount_to), min_amount_decimals, 9)
+
+        if isinstance(keep_value_from, int) and isinstance(keep_value_to, int):
+            keep_value = random_round(random.randint(keep_value_from, keep_value_to), 0, 4)
+        else:
+            keep_value = random_round(random.uniform(keep_value_from, keep_value_to), min_keep_value_decimals, 9)
 
         balance_amount = await self.get_balance(address_token)
+        
 
         if swap_all_balance:
-            if address_token == '':
-                amount = round(balance_amount - keep_value_gas, random.randint(7, 8))
-                if amount < 0:
-                    amount = 0
-            else:
-                amount = balance_amount
+            amount = random_round(balance_amount - keep_value, 7, 9)
+            if amount < 0:
+                amount = 0
             return amount
+        
+        if address_token == '' and amount > balance_amount:
+            amount = random_round(balance_amount - keep_value, 7, 9)
+            if amount < amount_from:
+                amount = amount_from
 
-        if amount > balance_amount and address_token != '':
-            amount = balance_amount
-        elif amount > balance_amount and address_token == '':
-            amount = round(balance_amount - keep_value_gas, random.randint(7, 8))
+        if amount > balance_amount:
+            amount = balance_amount 
 
         return amount
+
 
     async def get_balance(self, token_address: str) -> float | int:
         while True:

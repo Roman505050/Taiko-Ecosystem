@@ -4,6 +4,9 @@ program_data/
 .idea
 .vscode
 
+# Test files
+test.py
+
 # Security files
 certs/
 *.pem

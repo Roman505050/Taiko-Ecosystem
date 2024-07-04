@@ -21,8 +21,6 @@ class KodoExchange:
         self.swap_all_balance = params.swap_all_balance
         self.keep_value_from = params.keep_value_from
         self.keep_value_to = params.keep_value_to
-        self.keep_value_gas_from = params.keep_value_gas_from
-        self.keep_value_gas_to = params.keep_value_gas_to
 
         # Initialize Web3 manager
         self.manager = Web3Manager(params.private_key, 'taiko', params.proxy)
@@ -40,7 +38,6 @@ class KodoExchange:
         self.to_token_info = await self.manager.get_token_info(self.to_token_address)
         self.amount = await self.manager.get_amount_in(
             self.amount_from, self.amount_to,
-            self.keep_value_gas_from, self.keep_value_gas_to,
             self.from_token_address, self.swap_all_balance,
             self.keep_value_from, self.keep_value_to
             )
@@ -65,6 +62,9 @@ class KodoExchange:
 
     async def get_tx(self):
         await self.initialize()
+
+        if self.value == 0:
+            return None, 'The amount is too low'
 
         contract = self.manager.web3.eth.contract(address=self.contract_address, abi=KODO_EXCHANGE_ABI)
 

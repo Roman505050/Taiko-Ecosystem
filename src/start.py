@@ -1,6 +1,7 @@
 from src.utils import console
 import settings
 from src.modules.kodo_exchange import KodoExchange
+from src.modules.eth_wraps import ETHWraps
 
 import asyncio
 import random
@@ -17,7 +18,7 @@ async def runner(func, params):
         status, hash = await func_instance.manager.send_tx(tx)
     else:
         console.clog(f"Transaction is not created. Error: {info}", 'red')
-    await asyncio.sleep(random.randint(5, 30))
+    await asyncio.sleep(random.randint(40, 120))
 
 async def runner_without_send(func, params):
     func_instance = func(params)
@@ -32,6 +33,7 @@ async def runner_without_send(func, params):
 
 modules = {
     1: (KodoExchange, runner, settings.Params_KodoExchange, 'Kodo Exchange'),
+    2: (ETHWraps, runner, settings.Params_ETHWraps, 'ETH Wraps'),
 }
 
 def main():
@@ -80,6 +82,7 @@ def main():
                     console.clog(f"Account is skipped: {name_account}", 'yellow')
             # params.proxy = None
             asyncio.run(runner(func, params))
+                
     else:
         console.clog("Wrong number", 'red')
 
