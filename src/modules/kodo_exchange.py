@@ -29,9 +29,9 @@ class KodoExchange:
     
     async def _calculate_deadline(self):
         latest_block = await self.manager.web3.eth.get_block('latest')
-        # deadlines = [60, 120, 180, 240, 300, 360, 420, 480, 540, 600]
+        deadlines = [180, 240, 300, 360, 420, 480, 540, 600]
         return latest_block['timestamp'] + random.randint(
-            600, 1200
+            random.choice(deadlines), 1200
         )
 
     async def initialize(self):
