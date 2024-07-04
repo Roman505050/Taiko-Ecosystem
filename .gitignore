@@ -1,0 +1,15 @@
+program_data/
+*.exe
+.venv
+.idea
+.vscode
+
+# Security files
+certs/
+*.pem
+.env
+
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
