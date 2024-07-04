@@ -6,6 +6,9 @@ load_dotenv()
 TAG = "test"
 HIDE = False # Hide secret data in console. Log file will contain secret data anyway
 
+ACCOUNTS = ['test'] # List of accounts for which you want to run the program
+SHUFFLE_ACCOUNTS = True # Shuffle accounts list
+
 class Params:
     name = 'test'
     path_to_data = f'./program_data/{TAG}/{name}/data.json'

@@ -57,7 +57,9 @@ def main():
     console.clog(f"Your choice: {choice}")
     password = console.cgetpass("Enter password: ")
     if choice in modules.keys():
-        for name_account in ['test']:
+        if settings.SHUFFLE_ACCOUNTS:
+            random.shuffle(settings.ACCOUNTS)
+        for name_account in settings.ACCOUNTS:
             func, runner, params, name = modules[choice]
             params = params()
             params.name = name_account
