@@ -18,7 +18,7 @@ async def runner(func, params):
         status, hash = await func_instance.manager.send_tx(tx)
     else:
         console.clog(f"Transaction is not created. Error: {info}", 'red')
-    await asyncio.sleep(random.randint(40, 120))
+    # await asyncio.sleep(random.randint(25, 120))
 
 async def runner_without_send(func, params):
     func_instance = func(params)
@@ -80,7 +80,8 @@ def main():
                         console.clog(f"Incorrect password: {e}", 'red')
                 if new_password == "cancel":
                     console.clog(f"Account is skipped: {name_account}", 'yellow')
-            # params.proxy = None
+            params.proxy = None
+            
             asyncio.run(runner(func, params))
                 
     else:

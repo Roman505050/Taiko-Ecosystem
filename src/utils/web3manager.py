@@ -184,9 +184,32 @@ class Web3Manager:
             """Округлює значення до випадкової кількості десяткових знаків"""
             return round(value, random.randint(min_decimals, max_decimals))
 
+        def count_digits_in_float(num: float) -> int:
+            num = str(num)
+            if 'e' in num:
+                
+                num_split = num.split('e')
+                if '.' in num_split[0]:
+                    count_digits = len(num_split[0]) - 1
+                else:
+                    count_digits = 1
+                count_zero = int(num_split[-1]) * -1
+
+                return count_digits + count_zero - 1
+            elif '.' in num:
+                return len(num.split('.')[-1])
+            else:
+                return 0
         # Визначаємо мінімальну кількість десяткових знаків для amount і keep_value
-        min_amount_decimals = max(1, len(str(amount_from).split('.')[-1]) if '.' in str(amount_from) else 0)
-        min_keep_value_decimals = max(1, len(str(keep_value_from).split('.')[-1]) if '.' in str(keep_value_from) else 0)
+        if amount_from > amount_to:
+            min_amount_decimals = count_digits_in_float(amount_to)
+        else:
+            min_amount_decimals = count_digits_in_float(amount_from)
+        
+        if keep_value_from > keep_value_to:
+            min_keep_value_decimals = count_digits_in_float(keep_value_to)
+        else:
+            min_keep_value_decimals = count_digits_in_float(keep_value_from)
 
         if isinstance(amount_from, int) and isinstance(amount_to, int):
             amount = random_round(random.randint(amount_from, amount_to), 0, 4)
