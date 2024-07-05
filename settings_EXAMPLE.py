@@ -12,7 +12,7 @@ SHUFFLE_ACCOUNTS = True # Shuffle accounts list
 class Params:
     name = 'test'
     path_to_data = f'./program_data/{TAG}/{name}/data.json'
-    private_key = os.getenv('PRIVATE_KEY')
+    private_key = ''
 
     # user_agent = None
     proxy = None
